@@ -1,113 +1,90 @@
 # Cliff Walking
 
-Um projeto Python para implementar e testar o problema de aprendizado por reforço Cliff Walking.
+Este projeto implementa uma solução para o problema **Cliff Walking**, um gridworld clássico de aprendizado por reforço apresentado por Sutton & Barto. A atividade explora a transição entre métodos tabulares e aproximação de função, comparando um agente **Q-Learning tabular** com um agente **Q-Learning com aproximação linear e semi-gradiente**.
+
+O artefato principal é o notebook [`notebook.ipynb`](notebook.ipynb), que contém a implementação, os testes, as visualizações e a análise comparativa em português.
+
+## O que foi implementado
+
+- Ambiente Cliff Walking implementado do zero, sem Gym/Gymnasium.
+- Dinâmica completa do gridworld:
+  - grid `4 x 12`;
+  - estado inicial `(3, 0)`;
+  - objetivo `(3, 11)`;
+  - precipício entre `(3, 1)` e `(3, 10)`;
+  - recompensa `-1` por passo;
+  - recompensa `-100` ao cair no precipício, com retorno ao início.
+- Visualização do grid, das políticas aprendidas e das funções de valor.
+- Agente Q-Learning tabular com:
+  - tabela `Q(s,a)`;
+  - política epsilon-greedy;
+  - decaimento de epsilon;
+  - métricas de recompensa, passos e quedas no precipício.
+- Agente com aproximação linear e semi-gradiente com:
+  - representação `Q(s,a,w) = w^T phi(s,a)`;
+  - vetor de features por blocos de ação;
+  - atualização semi-gradiente explícita;
+  - estabilização dos pesos durante o treinamento.
+- Comparação final entre os dois agentes:
+  - curvas de aprendizado;
+  - políticas aprendidas;
+  - rollouts gulosos;
+  - funções de valor estimadas;
+  - discussão sobre generalização, estabilidade e limitações.
+
+## Resultados principais
+
+Na execução validada do notebook:
+
+- O agente tabular alcançou o objetivo em `13` passos no rollout guloso.
+- O agente linear alcançou o objetivo em `17` passos no rollout guloso.
+- O agente linear obteve melhor recompensa média final durante o treinamento.
+- O agente tabular produziu o caminho guloso mais curto e teve menos quedas acumuladas no precipício.
+
+Esses resultados mostram o trade-off central da atividade: a aproximação linear permite generalização entre estados, mas pode ser menos precisa em um ambiente pequeno e discreto, especialmente perto do precipício.
 
 ## Requisitos
 
 - Python 3.11 ou superior
-- [uv](https://docs.astral.sh/uv/) - Um gerenciador de pacotes Python extremamente rápido
+- [uv](https://docs.astral.sh/uv/) para gerenciamento do ambiente
 
-## Instalação
+As dependências principais são:
 
-### Instalar uv
+- `numpy`
+- `matplotlib`
 
-Se você não tem `uv` instalado, siga o [guia de instalação oficial](https://docs.astral.sh/uv/getting-started/installation/):
+## Como executar
 
-```bash
-# macOS / Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Windows (PowerShell)
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-### Configurar o projeto
-
-Uma vez que você tem `uv` instalado, configure o ambiente do projeto:
+Instale as dependências e crie o ambiente virtual:
 
 ```bash
-# Instalar dependências e criar ambiente virtual
 uv sync
-
-# Este comando irá:
-# - Criar um diretório .venv com o ambiente Python
-# - Instalar todas as dependências do projeto
-# - Bloquear as dependências em uv.lock para reprodutibilidade
 ```
 
-## Uso
-
-Ative o ambiente virtual:
+Abra o notebook:
 
 ```bash
-# Em macOS/Linux
-source .venv/bin/activate
-
-# Em Windows
-.venv\Scripts\activate
+uv run jupyter notebook notebook.ipynb
 ```
 
-Execute seus scripts Python normalmente:
+Se preferir usar JupyterLab:
 
 ```bash
-python seu_script.py
+uv run jupyter lab notebook.ipynb
 ```
-
-Ou use `uv run` para executar sem ativar o ambiente:
-
-```bash
-uv run python seu_script.py
-```
-
-## Desenvolvimento
-
-### Gerenciar dependências
-
-Adicionar uma nova dependência:
-
-```bash
-uv add nome_do_pacote
-```
-
-Adicionar uma dependência apenas para desenvolvimento:
-
-```bash
-uv add --dev nome_do_pacote
-```
-
-Remover uma dependência:
-
-```bash
-uv remove nome_do_pacote
-```
-
-Atualizar dependências:
-
-```bash
-# Atualizar todas as dependências
-uv lock --upgrade
-
-# Atualizar pacote específico
-uv lock --upgrade-package nome_do_pacote
-```
-
-### Ambiente virtual
-
-O ambiente virtual é automaticamente gerenciado em `.venv/`. Para usá-lo em sua IDE, aponte para `.venv/bin/python` (ou `.venv\Scripts\python.exe` no Windows).
 
 ## Estrutura do projeto
 
-```
+```text
 .
-├── notebook.ipynb    # Notebook Jupyter com implementação e testes
+├── notebook.ipynb    # Implementação, testes, gráficos e análise
 ├── pyproject.toml    # Configuração do projeto e dependências
-├── uv.lock          # Versões das dependências bloqueadas
-├── conteudo.md      # Conteúdo do projeto
-├── avaliacao.md     # Critérios de avaliação
-└── README.md        # Este arquivo
+├── uv.lock           # Versões bloqueadas das dependências
+├── conteudo.md       # Enunciado da atividade
+├── avaliacao.md      # Critérios de avaliação
+└── README.md         # Introdução do projeto
 ```
 
-## Mais informações
+## Observação sobre o vídeo
 
-- [Documentação do uv](https://docs.astral.sh/uv/)
-- [Guia de Empacotamento Python](https://packaging.python.org/)
+A atividade também exige um vídeo explicativo de 2 a 5 minutos. Este repositório foca na implementação e documentação técnica no notebook; o roteiro e a gravação do vídeo ficam como etapa separada.
